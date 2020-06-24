@@ -5,7 +5,12 @@ class Todo extends React.Component{
         super(props);
         this.state = {
             currentValue: '',
-            listTodo: []
+            listTodo: [
+                {
+                    id: 1,
+                    text: 'test'
+                }
+            ]
         };
         this.addTask = this.addTask.bind(this);
         this.selfValue = this.selfValue.bind(this);
@@ -16,13 +21,26 @@ class Todo extends React.Component{
     }
 
     addTask(event){
-        let {value} = this.state;
+        event.preventDefault();
+        const value = this.state.currentValue;
         if (value) {
-
+            let newDataList = [...this.state.listTodo],
+                lastIndex = this.state.listTodo[this.state.listTodo.length - 1].id;
+                newDataList.push(
+                    {
+                        id: lastIndex+1,
+                        text: value
+                    }
+                );
+            this.setState({
+                currentValue: '',
+                listTodo:newDataList
+            })
         }
     }
 
     render() {
+        let {listTodo} = this.state;
         return (
             <div className="todo">
                 <form className="todo__form" onSubmit={this.addTask}>
@@ -32,11 +50,12 @@ class Todo extends React.Component{
                             className="todo__enter"
                             placeholder={'Введите запись'}
                             onInput={this.selfValue}
+                            value={this.state.currentValue}
                         />
                         <button className="todo__btn-submit">Добавить</button>
                     </div>
                     <ul className="todo__list">
-                        <li className="todo__item">Тестовая запись</li>
+                        {listTodo.map((item)=><li key={item.id}>{item.text}<button>Изменить</button></li>)}
                     </ul>
                 </form>
             </div>
