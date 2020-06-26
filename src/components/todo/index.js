@@ -1,4 +1,5 @@
 import React from "react";
+import TodoItem from "./TodoItem";
 
 class Todo extends React.Component{
     constructor(props) {
@@ -12,8 +13,19 @@ class Todo extends React.Component{
                 }
             ]
         };
+
         this.addTask = this.addTask.bind(this);
         this.selfValue = this.selfValue.bind(this);
+        this.editTask = this.editTask.bind(this);
+        this.delTask = this.delTask.bind(this);
+    }
+
+    editTask(id, text){
+
+    }
+
+    delTask(id) {
+
     }
 
     selfValue(event){
@@ -28,7 +40,7 @@ class Todo extends React.Component{
                 lastIndex = this.state.listTodo[this.state.listTodo.length - 1].id;
                 newDataList.push(
                     {
-                        id: lastIndex+1,
+                        id: ++lastIndex,
                         text: value
                     }
                 );
@@ -55,7 +67,11 @@ class Todo extends React.Component{
                         <button className="todo__btn-submit">Добавить</button>
                     </div>
                     <ul className="todo__list">
-                        {listTodo.map((item)=><li key={item.id}>{item.text}<button>Изменить</button></li>)}
+                      {
+                        listTodo.map((item)=>{
+                          return <TodoItem key={item.id} id={item.id} text={item.text} onEdit={this.editTask(item.id, item.text)}/>
+                        })
+                      }
                     </ul>
                 </form>
             </div>
