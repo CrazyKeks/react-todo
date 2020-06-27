@@ -1,5 +1,11 @@
 import React from "react";
 import TodoItem from "./TodoItem";
+import {TodoWrap} from "./styled";
+import {DefTitle} from "../../assets/title/styled";
+import {DefButton} from "../../assets/button/styled";
+import {DefInput} from "../../assets/input/styled";
+import {InputWrapper} from "../../assets/wrapper/styled";
+import './style.css'
 
 class Todo extends React.Component{
     constructor(props) {
@@ -31,7 +37,7 @@ class Todo extends React.Component{
             if (item.id === id) {
                 item.edit = true;
             }
-        })
+        });
         this.setState({
             listTodo: newDataList,
             editTextTask: text
@@ -42,9 +48,9 @@ class Todo extends React.Component{
         let newDataList = [...this.state.listTodo];
         newDataList.map((item, index)=>{
             if (item.id === id) {
-                newDataList = newDataList.splice(index, index)
+                newDataList.splice(index, 1)
             }
-        })
+        });
         this.setState({listTodo: newDataList});
     }
 
@@ -54,8 +60,11 @@ class Todo extends React.Component{
             if (item.id === id) {
                 item.edit = false;
             }
-        })
-        this.setState({listTodo: newDataList});
+        });
+        this.setState({
+            listTodo: newDataList,
+            editTextTask: ''
+        });
     }
 
     saveTask(id) {
@@ -65,7 +74,7 @@ class Todo extends React.Component{
                 item.text = this.state.editTextTask;
                 item.edit = false;
             }
-        })
+        });
         this.setState({
             editTextTask: '',
             listTodo: newDataList
@@ -77,7 +86,7 @@ class Todo extends React.Component{
     }
 
     editTextTaskValue(event) {
-        this.setState({editTextTask: event.target.textContent})
+        this.setState({editTextTask: event.target.value})
     }
 
     addTask(event) {
@@ -85,14 +94,21 @@ class Todo extends React.Component{
         const value = this.state.currentValue;
         if (value) {
             let newDataList = [...this.state.listTodo],
+                lastIndex;
+
+            if (this.state.listTodo.length === 0) {
+                lastIndex = 0;
+            } else {
                 lastIndex = this.state.listTodo[this.state.listTodo.length - 1].id;
-                newDataList.push(
-                    {
-                        id: ++lastIndex,
-                        text: value,
-                        edit: false,
-                    }
-                );
+            }
+
+            newDataList.push(
+                {
+                    id: ++lastIndex,
+                    text: value,
+                    edit: false,
+                }
+            );
             this.setState({
                 currentValue: '',
                 listTodo:newDataList
@@ -104,18 +120,21 @@ class Todo extends React.Component{
         let {listTodo} = this.state;
         return (
             <div className="todo">
+                <DefTitle className="todo__title">Todo лист</DefTitle>
                 <form className="todo__form" onSubmit={this.addTask}>
                     <div className="todo__enter-wrap">
-                        <input
-                            type="text"
-                            className="todo__enter"
-                            placeholder={'Введите запись'}
-                            onChange ={this.selfValue}
-                            value={this.state.currentValue}
-                        />
-                        <button className="todo__btn-submit">Добавить</button>
+                        <InputWrapper margin={'0 10px 0 0'}>
+                            <DefInput
+                                type="text"
+                                className="todo__enter"
+                                placeholder='Введите запись'
+                                onChange ={this.selfValue}
+                                value={this.state.currentValue}
+                            />
+                        </InputWrapper>
+                        <DefButton className="todo__btn-submit">Добавить</DefButton>
                     </div>
-                    <ul className="todo__list">
+                    <TodoWrap className="todo__list">
                       {
                         listTodo.map((item)=>{
                           return <TodoItem
@@ -131,7 +150,7 @@ class Todo extends React.Component{
                           />
                         })
                       }
-                    </ul>
+                    </TodoWrap>
                 </form>
             </div>
         )

@@ -1,0 +1,39 @@
+.todo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.todo__enter-wrap {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+}
+
+.todo__li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.todo__text {
+  margin-right: 10px;
+  font-size: 16px;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+  border: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: 30%;
+  flex-shrink: 0;
+}
+
+.todo__list {
+  margin: 0 auto;
+  max-width: 300px;
+}
+
+.todo__wrap-btn {
+  display: flex;
+}
