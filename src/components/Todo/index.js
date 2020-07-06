@@ -8,87 +8,62 @@ import {InputWrapper} from "../../assets/wrapper/styled";
 import './style.css'
 
 function Todo() {
-    let state = {
-        currentValue: '',
-        editTextTask: '',
-        listTodo: [
-            {
-                id: 1,
-                text: 'test',
-                edit: false,
-            }
-        ]
-    };
 
     function editTask(id,text){
-        let newDataList = [...todoState.listTodo];
+        let newDataList = [...todoList];
         newDataList.map((item)=> {
             if (item.id === id) {
                 item.edit = true;
             }
         });
-        updateStateTodo({
-            listTodo: newDataList,
-            editTextTask: text
-        });
+        setEditTextTask(text);
+        setListState(newDataList);
     }
 
     function removeTask(id) {
-        let newDataList = [...todoState.listTodo];
+        let newDataList = [...todoList];
         newDataList.map((item, index)=>{
             if (item.id === id) {
                 newDataList.splice(index, 1)
             }
         });
-        updateStateTodo({listTodo: newDataList});
+        setListState(newDataList);
     }
 
     function cancelTask(id){
-        let newDataList = [...todoState.listTodo];
+        let newDataList = [...todoList];
         newDataList.map((item)=>{
             if (item.id === id) {
                 item.edit = false;
             }
         });
-        updateStateTodo({
-            listTodo: newDataList,
-            editTextTask: ''
-        });
+        setEditTextTask('');
+        setListState(newDataList);
     }
 
     function saveTask(id) {
-        let newDataList = [...todoState.listTodo];
+        let newDataList = [...todoList];
         newDataList.map((item)=>{
             if (item.id === id) {
-                item.text = todoState.editTextTask;
+                item.text = editTextTask;
                 item.edit = false;
             }
         });
-        updateStateTodo({
-            editTextTask: '',
-            listTodo: newDataList
-        });
-    }
-
-    function selfValue(event) {
-        updateStateTodo({currentValue: event.target.value})
-    }
-
-    function editTextTaskValue(event) {
-        updateStateTodo({editTextTask: event.target.value})
+        setEditTextTask('');
+        setListState(newDataList);
     }
 
     function addTask(event) {
         event.preventDefault();
-        const value = todoState.currentValue;
+        const value = currentValue;
         if (value) {
-            let newDataList = [...todoState.listTodo],
+            let newDataList = [...todoList],
                 lastIndex;
 
-            if (todoState.listTodo.length === 0) {
+            if (newDataList.length === 0) {
                 lastIndex = 0;
             } else {
-                lastIndex = todoState.listTodo[todoState.listTodo.length - 1].id;
+                lastIndex = newDataList[newDataList.length - 1].id;
             }
 
             newDataList.push(
@@ -98,14 +73,21 @@ function Todo() {
                     edit: false,
                 }
             );
-            updateStateTodo({
-                currentValue: '',
-                listTodo:newDataList
-            })
+            setCurrentValue('');
+            setListState(newDataList);
         }
     }
 
-    const [todoState, updateStateTodo] = useState(state);
+    const [currentValue, setCurrentValue] = useState(''),
+          [editTextTask, setEditTextTask] = useState(''),
+          [todoList, setListState] = useState( [
+                {
+                    id: 1,
+                    text: 'test',
+                    edit: false,
+                }
+            ]
+        );
     return (
         <div className="todo">
             <DefTitle className="todo__title">Todo лист</DefTitle>
@@ -116,23 +98,23 @@ function Todo() {
                             type="text"
                             className="todo__enter"
                             placeholder='Введите запись'
-                            onChange ={selfValue}
-                            value={todoState.currentValue}
+                            onChange ={event=>setCurrentValue(event.target.value)}
+                            value={currentValue}
                         />
                     </InputWrapper>
                     <DefButton className="todo__btn-submit">Добавить</DefButton>
                 </div>
                 <TodoWrap className="todo__list">
                     {
-                        todoState.listTodo.map((item)=>{
+                        todoList.map((item)=>{
                             return <TodoItem
                                 key={item.id}
                                 id={item.id}
                                 text={item.text}
                                 edit={item.edit}
                                 onEdit={()=>editTask(item.id, item.text)}
+                                onEditText={setEditTextTask}
                                 onRemove={()=>removeTask(item.id)}
-                                onEditText={editTextTaskValue}
                                 onSaveText={()=>saveTask(item.id)}
                                 onCancelEdit={()=>cancelTask(item.id)}
                             />

@@ -17,12 +17,11 @@ function TodoItem(props) {
       </ItemList>
     )
   };
-
   const editOptionBtn = () => {
     return (
       <ItemList className={'todo__li'} margin={'0 0 10px 0'}>
         <InputWrapper margin={'0 10px 0 0'}>
-          <DefInput type="text" editable="true" defaultValue={props.text} onChange={props.onEditText} ></DefInput>
+          <DefInput type="text" editable="true" defaultValue={props.text} onChange={event=>props.onEditText(event.target.value)} ></DefInput>
         </InputWrapper>
         <div className="todo__wrap-btn">
           <DefButton className="todo__save" onClick={props.onSaveText} margin={'0 10px 0 0'}>
